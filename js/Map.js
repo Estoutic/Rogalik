@@ -1,6 +1,6 @@
 import Tile from "./Tile.js";
 
-var map = []
+let map = []
 
 const columns = 40;
 const rows = 24;
@@ -15,28 +15,53 @@ for (let i = 0; i < rows; i++) {
 var rooms = getRandomVal(5, 10);
 
 for (let index = 0; index < rooms; index++) {
-    var width = getRandomVal(3, 8);
-    var height = getRandomVal(3, 8);
-    var randomX = getRandomVal(0, columns - width);
-    var randomY = getRandomVal(0, rows - height); 
+    let width = getRandomVal(3, 8);
+    let height = getRandomVal(3, 8);
+    let randomX = getRandomVal(0, columns - width);
+    let randomY = getRandomVal(0, rows - height); 
 
-    var overlaps = false;
-    for (var i = randomY; i < randomY + height; i++) {
-        for (var j = randomX; j < randomX + width; j++) {
-            if (map[i][j].type !== null) {
-                overlaps = true;
-                break;
-            }
-        }
-        if (overlaps) {
+    let overlaps = false;
+    
+    for (const row of map.slice(randomY, randomY + height)) {
+        if (row.slice(randomX, randomX + width).some(tile => tile.type !== null)) {
+            overlaps = true;
             break;
         }
     }
 
-    for (var i = randomY; i < randomY + height; i++) {
-        for (var j = randomX; j < randomX + width; j++) {
-            map[i][j].type = null;
+    for (let i = randomY; i < randomY + height; i++) {
+        for (let j = randomX; j < randomX + width; j++) {
+            map[i][j].type = "tile";
         }
+    }
+}
+function addRandomLines(lengthType, length, endRange) {
+    
+        let lineLength = getRandomVal(3, length);
+        let startCoord = getRandomVal(0, endRange);
+
+        for (let index = 0; index < lengthType; index++) {
+            if (lengthType === columns) {
+                map[startCoord][index].type = "tile";
+            } else {
+                map[index][startCoord].type = "tile";
+            }
+        }
+
+}
+
+let horizontalLines = getRandomVal(3, 5);
+var verticalLines = getRandomVal(3, 5);
+
+while (horizontalLines > 0 || verticalLines > 0) {
+    if (horizontalLines > 0) {
+        addRandomLines( columns, columns,  rows - 1);
+        horizontalLines--;
+    }
+
+    if (verticalLines > 0) {
+        addRandomLines( rows, columns,  columns - 1);
+        verticalLines--;
     }
 }
 
