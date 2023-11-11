@@ -1,6 +1,7 @@
 import { map } from "./Map.js"
 
 
+
 if (window.jQuery) {
     // console.log(map);
     for (let i = 0; i < map.length; i++) {
@@ -11,3 +12,7 @@ if (window.jQuery) {
         }
     }
 }
+
+
+// добавить метод который принимает 2 матрицы исходные и обновленну и с помощью jquery.
+// добавить метод который обновляет состояние с помощью setTimeoiut()

@@ -68,21 +68,42 @@ while (horizontalLines > 0 || verticalLines > 0) {
 const tiles = map.flatMap((row) => row.filter((tile) => {
     return tile.type === "tile";
 }));
+
+
+applyBuffToRandomTiles(10, "tileHP");
+
+applyBuffToRandomTiles(2, "tileSW");
+
+
+applyBuffToRandomTiles(10, "tileE");
+
+let hero = tiles[getRandomVal(0, tiles.length)];
+hero.person = "tileP";
+
 console.log(tiles);
 
-var i = 10;
-while (i > 0) {
-    tiles[getRandomVal(i, tiles.length - 1)].type = "tileHP";
-    i--;
-}
-i = 2;
-while (i > 0) {
-    tiles[getRandomVal(i, tiles.length - 1)].type = "tileSW";
-    i--;
-}
 
 function getRandomVal(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 
 }
-export { map };
+
+function applyBuffToRandomTiles(count, buffType) {
+    if (buffType === "tileE") {
+        while (count > 0) {
+            tiles[getRandomVal(0, tiles.length - 1)].person = buffType;
+            count--;
+
+        }
+    }
+    else {
+
+
+        while (count > 0) {
+            tiles[getRandomVal(0, tiles.length - 1)].buff = buffType;
+            count--;
+
+        }
+    }
+}
+export { map, tiles, hero };
