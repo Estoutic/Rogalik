@@ -1,5 +1,5 @@
 import Tile from "./Tile.js";
-
+import Person from './Person.js'
 let map = []
 
 const columns = 40;
@@ -75,14 +75,22 @@ applyBuffToRandomTiles(10, "tileHP");
 applyBuffToRandomTiles(2, "tileSW");
 
 
-applyBuffToRandomTiles(10, "tileE");
+addEnimies(10);
 
 let hero = tiles[getRandomVal(0, tiles.length)];
-hero.person = "tileP";
+hero.person = new Person("tileP");
 
 function getRandomVal(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 
+}
+
+function addEnimies(count) {
+    while (count > 0) {
+        tiles[getRandomVal(0, tiles.length - 1)].person = new Person("tileE");
+        count--;
+
+    }
 }
 
 function applyBuffToRandomTiles(count, buffType) {
@@ -103,4 +111,6 @@ function applyBuffToRandomTiles(count, buffType) {
         }
     }
 }
+
+// console.log(map);
 export { map, tiles, hero };

@@ -1,17 +1,16 @@
 import { map, hero } from "./Map.js";
 import { attackHero } from "./enemyController.js";
-import { renderMap } from "./renderMap.js";
+import { updateMap } from "./renderMap.js";
+import Person from "./Person.js";
 
 const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
-let heroDamage = 50;
-let newMap = [];
+let hp =  map[currentRow][currentColumn].person.hp;
+let damage = map[currentRow][currentColumn].person.damage;
 
-for(let i = 0; i < map.length; i++){
-    newMap[i] = map[i];
-}
+let newMap = JSON.parse(JSON.stringify(map));
 
 function moveObject(direction) {
     let lastRow = currentRow;
@@ -34,27 +33,32 @@ function moveObject(direction) {
             break;
     }
 
-    if (newMap[currentRow][currentColumn].type !== "tileW" && newMap[currentRow][currentColumn].person !== "tileE") {
+    if (newMap[currentRow][currentColumn].type !== "tileW" && newMap[currentRow][currentColumn].person?.name !== "tileE") {
 
         const container = $('.inventory');
 
+
+
+
         if (newMap[currentRow][currentColumn].buff === "tileSW") {
-            heroDamage += 25;
+            damage += 5;
+
             container.append($("<div></div>").addClass("elementSW"));
 
             newMap[currentRow][currentColumn].buff = null;
 
         }
         else if (newMap[currentRow][currentColumn].buff === "tileHP") {
-            newMap[currentRow][currentColumn].health += 5;
+            hp += 5;
             container.append($("<div></div>").addClass("elementHP"));
 
             newMap[currentRow][currentColumn].buff = null;
         }
 
-        newMap[currentRow][currentColumn].person = "tileP";
+        newMap[currentRow][currentColumn].person = new Person("tileP",hp,damage);
+
         attackHero({ currentRow, currentColumn }, newMap);
-        renderMap(newMap,map);
+        updateMap(newMap,map);
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
@@ -79,16 +83,16 @@ function hit() {
         const newColumn = currentColumn + dir.col;
 
         if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
-            if (newMap[newRow][newColumn].person === "tileE") {
-                newMap[newRow][newColumn].health -= heroDamage;
+            if (newMap[newRow][newColumn].person?.name === "tileE" & newMap[newRow][newColumn].person instanceof Person) {
+                newMap[newRow][newColumn].person.hp -= heroDamage;
 
                 if (newMap[newRow][newColumn].health <= 0) {
-                    newMap[newRow][newColumn].person = null;
+                    newMap[newRow][newColumn].person.name = null;
                 }
             }
         }
     }
-    renderMap(newMap,map);
+    updateMap(newMap,map);
 }
 
 document.addEventListener('keydown', function (event) {
