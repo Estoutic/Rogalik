@@ -4,6 +4,7 @@ const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
+let heroDamage = 50;
 
 function moveObject(direction) {
     let lastRow = currentRow;
@@ -27,9 +28,23 @@ function moveObject(direction) {
     }
 
     if (map[currentRow][currentColumn].type !== "tileW" && map[currentRow][currentColumn].person !== "tileE") {
-        if (map[currentRow][currentColumn].buff) {
+
+        const container = $('.inventory');
+
+        if (map[currentRow][currentColumn].buff === "tileSW") {
+            heroDamage += 25;
+            container.append($("<div></div>").addClass("elementSW"));
+
+            map[currentRow][currentColumn].buff = null;
+
+        }
+        else if (map[currentRow][currentColumn].buff === "tileHP") {
+            map[currentRow][currentColumn].health += 5;
+            container.append($("<div></div>").addClass("elementHP"));
+
             map[currentRow][currentColumn].buff = null;
         }
+
         map[currentRow][currentColumn].person = "tileP";
         updateHtmlMap(map);
     } else {
@@ -56,7 +71,7 @@ function hit() {
 
         if (newRow >= 0 && newRow < map.length && newColumn >= 0 && newColumn < map[0].length) {
             if (map[newRow][newColumn].person === "tileE") {
-                map[newRow][newColumn].health -= 50;
+                map[newRow][newColumn].health -= heroDamage;
 
                 if (map[newRow][newColumn].health <= 0) {
                     map[newRow][newColumn].person = null;
@@ -77,6 +92,7 @@ document.addEventListener('keydown', function (event) {
             moveObject(event.key);
             break;
         case " ":
+            event.preventDefault();
             hit();
             break;
     }
