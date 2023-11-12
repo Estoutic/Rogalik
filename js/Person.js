@@ -3,15 +3,12 @@ class Person{
     hp;
     damage;
 
-    constructor(name,hp = 20,damage = 5){
+    constructor(name,hp ,damage){
         this.name = name;
         this.hp = hp;
         this.damage = damage;
     }
-    getHealthPx() {
-        return (this.hp * 0.2).toString() + "px";
-    }
-    
+
 }
 
 export default Person;

@@ -33,7 +33,7 @@ function moveObject(direction) {
             break;
     }
 
-    if (newMap[currentRow][currentColumn].type !== "tileW" && newMap[currentRow][currentColumn].person?.name !== "tileE") {
+    if (newMap[currentRow][currentColumn].type != "tileW" && newMap[currentRow][currentColumn].person?.name != "tileE") {
 
         const container = $('.inventory');
 
@@ -83,10 +83,10 @@ function hit() {
         const newColumn = currentColumn + dir.col;
 
         if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
-            if (newMap[newRow][newColumn].person?.name === "tileE" & newMap[newRow][newColumn].person instanceof Person) {
-                newMap[newRow][newColumn].person.hp -= heroDamage;
+            if (newMap[newRow][newColumn].person?.name === "tileE") {
+                newMap[newRow][newColumn].person.hp -= damage;
 
-                if (newMap[newRow][newColumn].health <= 0) {
+                if (newMap[newRow][newColumn].person.hp <= 0) {
                     newMap[newRow][newColumn].person.name = null;
                 }
             }

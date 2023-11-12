@@ -78,7 +78,7 @@ applyBuffToRandomTiles(2, "tileSW");
 addEnimies(10);
 
 let hero = tiles[getRandomVal(0, tiles.length)];
-hero.person = new Person("tileP");
+hero.person = new Person("tileP",20,5);
 
 function getRandomVal(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -87,7 +87,9 @@ function getRandomVal(min, max) {
 
 function addEnimies(count) {
     while (count > 0) {
-        tiles[getRandomVal(0, tiles.length - 1)].person = new Person("tileE");
+        tiles[getRandomVal(0, tiles.length - 1)].person = new Person("tileE", 20, 5);
+
+
         count--;
 
     }
