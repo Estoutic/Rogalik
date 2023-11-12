@@ -1,29 +1,36 @@
 import Person from "./Person.js";
-
-export function updateMap(newMap, map) {
-    const container = $('.field');
-    container.empty();
+import { map } from "./Map.js"
+export function updateMap(newMap) {
     console.log(newMap);
 
     for (let i = 0; i < newMap.length; i++) {
         for (let j = 0; j < newMap[i].length; j++) {
-            if ( newMap[i][j].person?.name) {
-                console.log("update");
+            if (newMap[i][j] != map[i][j]) {
 
-                var tile = $("<div></div>").addClass(["tile", newMap[i][j].type, newMap[i][j].person.name, newMap[i][j].buff].join(" "));
+                var element = $("#tile_" + i + "_" + j);
 
-                var health = $("<div></div>").addClass("health");
-                health.css("width", newMap[i][j].person.hp + "px");
-                tile.append(health);
-            } else {
-                var tile = $("<div></div>").addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
+                element.removeClass();
+                element.empty();
+
+                if (newMap[i][j].person) {
+
+                    element.addClass(["tile", newMap[i][j].type, newMap[i][j].person?.name, newMap[i][j].buff].join(" "));
+
+                    // element.addClass("health");
+                    var health = $("<div></div>").addClass("health");
+                    health.css("width", map[i][j].getHealthPx());
+
+                    element.append(health);
+                } else {
+                    element.addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
+                }
             }
-            container.append(tile);
+
         }
     }
 }
 
-export function renderMap(map) {
+export function renderMap() {
     const container = $('.field');
 
     for (let i = 0; i < map.length; i++) {
@@ -31,6 +38,7 @@ export function renderMap(map) {
             var tile = $("<div></div>").addClass(["tile", map[i][j].type, map[i][j].person?.name, map[i][j].buff].join(" "));
             if (map[i][j].person) {
                 var health = $("<div></div>").addClass("health");
+                console.log( map[i][j].getHealthPx());
                 health.css("width", map[i][j].getHealthPx());
                 tile.append(health);
             }

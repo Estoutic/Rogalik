@@ -1,7 +1,19 @@
-let enemyDamage = 10;
+import { updateMap } from "./renderMap.js";
+import { newMap, currentRow, currentColumn } from "./personController.js";
 
-export function attackHero(hero, map) {
 
+
+export function attack(gameIsOver) {
+    const intervalDuration = 1000;
+
+    setInterval(() => {
+        checkEnemies();
+    }, intervalDuration);
+}
+
+function checkEnemies(gameIsOver) {
+
+    console.log(currentRow, currentColumn);
     const enemyDirections = [
         { row: -1, col: 0 },
         { row: -1, col: 1 },
@@ -16,29 +28,32 @@ export function attackHero(hero, map) {
     const attackingEnemies = [];
 
     for (const dir of enemyDirections) {
-        const enemyRow = hero.currentRow + dir.row;
-        const enemyColumn = hero.currentColumn + dir.col;
+        const enemyRow = currentRow + dir.row;
+        const enemyColumn = currentColumn + dir.col;
 
         if (
             enemyRow >= 0 &&
-            enemyRow < map.length &&
+            enemyRow < newMap.length &&
             enemyColumn >= 0 &&
-            enemyColumn < map[0].length &&
-            map[enemyRow][enemyColumn].person === "tileE"
+            enemyColumn < newMap[0].length &&
+            newMap[enemyRow][enemyColumn].person?.name === "tileE"
         ) {
             attackingEnemies.push({ row: enemyRow, column: enemyColumn });
         }
     }
 
     for (const enemy of attackingEnemies) {
-        console.log(attackingEnemies);
-        map[hero.currentRow][hero.currentColumn].health -= enemyDamage;
-        console.log(map[hero.currentRow][hero.currentColumn].health);
-        if (map[hero.currentRow][hero.currentColumn].health <= 0) {
-            map[hero.currentRow][hero.currentColumn].person = null;
-            hero = null;
+        if (newMap[currentRow][currentColumn].person) {
+            newMap[currentRow][currentColumn].person.hp -= newMap[enemy.row][enemy.column].person.damage;
+            if (newMap[currentRow][currentColumn].person?.hp <= 0) {
+                var hero = $("#tile_" + currentRow + "_" + currentColumn);
+                hero.removeClass(newMap[currentRow][currentColumn].person.name);
+                newMap[currentRow][currentColumn].person = null;
+            
+            }
         }
     }
 
+    updateMap(newMap);
 
 }

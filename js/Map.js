@@ -35,9 +35,8 @@ for (let index = 0; index < rooms; index++) {
         }
     }
 }
-function addRandomLines(lengthType, length, endRange) {
+function addRandomLines(lengthType, endRange) {
 
-    let lineLength = getRandomVal(3, length);
     let startCoord = getRandomVal(0, endRange);
 
     for (let index = 0; index < lengthType; index++) {
@@ -55,15 +54,16 @@ var verticalLines = getRandomVal(3, 5);
 
 while (horizontalLines > 0 || verticalLines > 0) {
     if (horizontalLines > 0) {
-        addRandomLines(columns, columns, rows - 1);
+        addRandomLines(columns, rows - 1);
         horizontalLines--;
     }
 
     if (verticalLines > 0) {
-        addRandomLines(rows, columns, columns - 1);
+        addRandomLines(rows, columns - 1);
         verticalLines--;
+            }
     }
-}
+
 
 const tiles = map.flatMap((row) => row.filter((tile) => {
     return tile.type === "tile";
@@ -81,14 +81,13 @@ let hero = tiles[getRandomVal(0, tiles.length)];
 hero.person = new Person("tileP",20,5);
 
 function getRandomVal(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random ()  * (max - min + 1)) + min;
 
 }
 
 function addEnimies(count) {
     while (count > 0) {
         tiles[getRandomVal(0, tiles.length - 1)].person = new Person("tileE", 20, 5);
-
 
         count--;
 
@@ -104,8 +103,6 @@ function applyBuffToRandomTiles(count, buffType) {
         }
     }
     else {
-
-
         while (count > 0) {
             tiles[getRandomVal(0, tiles.length - 1)].buff = buffType;
             count--;
@@ -114,5 +111,4 @@ function applyBuffToRandomTiles(count, buffType) {
     }
 }
 
-// console.log(map);
 export { map, tiles, hero };

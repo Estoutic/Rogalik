@@ -13,7 +13,7 @@ class Tile {
     getHealthPx() {
         if (this.person) {
 
-            return (this.person.hp * 0.2).toString() + "px";
+            return (this.person.hp ).toString() + "px";
         }
 
     }

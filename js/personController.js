@@ -1,18 +1,17 @@
 import { map, hero } from "./Map.js";
-import { attackHero } from "./enemyController.js";
 import { updateMap } from "./renderMap.js";
-import Person from "./Person.js";
 
 const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
-let hp =  map[currentRow][currentColumn].person.hp;
+let hp = map[currentRow][currentColumn].person.hp;
 let damage = map[currentRow][currentColumn].person.damage;
 
 let newMap = JSON.parse(JSON.stringify(map));
 
-function moveObject(direction) {
+export function moveObject(direction) {
+
     let lastRow = currentRow;
     let lastColumn = currentColumn;
 
@@ -25,7 +24,7 @@ function moveObject(direction) {
         case 's':
             currentRow = Math.min(newMap.length - 1, currentRow + 1);
             break;
-        case 'a':``
+        case 'a':
             currentColumn = Math.max(0, currentColumn - 1);
             break;
         case 'd':
@@ -37,9 +36,6 @@ function moveObject(direction) {
 
         const container = $('.inventory');
 
-
-
-
         if (newMap[currentRow][currentColumn].buff === "tileSW") {
             damage += 5;
 
@@ -49,16 +45,20 @@ function moveObject(direction) {
 
         }
         else if (newMap[currentRow][currentColumn].buff === "tileHP") {
-            hp += 5;
+            if (hp < 20) {
+                hp += 5;
+            }
+
             container.append($("<div></div>").addClass("elementHP"));
 
             newMap[currentRow][currentColumn].buff = null;
         }
 
-        newMap[currentRow][currentColumn].person = new Person("tileP",hp,damage);
+        newMap[currentRow][currentColumn].person = hero.person;
 
-        attackHero({ currentRow, currentColumn }, newMap);
-        updateMap(newMap,map);
+        updateMap(newMap);
+        console.log("update");
+
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
@@ -66,7 +66,7 @@ function moveObject(direction) {
 
 }
 
-function hit() {
+export function hit() {
     const directions = [
         { row: -1, col: 0 },
         { row: -1, col: 1 },
@@ -87,28 +87,15 @@ function hit() {
                 newMap[newRow][newColumn].person.hp -= damage;
 
                 if (newMap[newRow][newColumn].person.hp <= 0) {
-                    newMap[newRow][newColumn].person.name = null;
+
+
+                    newMap[newRow][newColumn].person = null;
                 }
             }
         }
     }
-    updateMap(newMap,map);
+    updateMap(newMap);
 }
-
-document.addEventListener('keydown', function (event) {
-    switch (event.key) {
-        case 'w':
-        case 's':
-        case 'a':
-        case 'd':
-            moveObject(event.key);
-            break;
-        case " ":
-            event.preventDefault();
-            hit();
-            break;
-    }
-});
 
 function findElementCoordinates(matrix, targetElement) {
     for (const row in matrix) {
@@ -120,3 +107,5 @@ function findElementCoordinates(matrix, targetElement) {
     }
     return null;
 }
+
+export { newMap, currentRow, currentColumn };
