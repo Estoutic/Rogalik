@@ -13,7 +13,6 @@ class Tile {
     }
 
     getHealthPx() {
-        console.log(this.health * 0.2 + "px");
         return (this.health * 0.2).toString() + "px";
     }
 

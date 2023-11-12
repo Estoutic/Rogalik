@@ -1,56 +1,65 @@
 import { map, hero } from "./Map.js";
+import { attackHero } from "./enemyController.js";
+import { renderMap } from "./renderMap.js";
 
 const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
 let heroDamage = 50;
+let newMap = [];
+
+for(let i = 0; i < map.length; i++){
+    newMap[i] = map[i];
+}
 
 function moveObject(direction) {
     let lastRow = currentRow;
     let lastColumn = currentColumn;
 
-    map[currentRow][currentColumn].person = null;
+    newMap[currentRow][currentColumn].person = null;
 
     switch (direction) {
         case 'w':
             currentRow = Math.max(0, currentRow - 1);
             break;
         case 's':
-            currentRow = Math.min(map.length - 1, currentRow + 1);
+            currentRow = Math.min(newMap.length - 1, currentRow + 1);
             break;
-        case 'a':
+        case 'a':``
             currentColumn = Math.max(0, currentColumn - 1);
             break;
         case 'd':
-            currentColumn = Math.min(map[0].length - 1, currentColumn + 1);
+            currentColumn = Math.min(newMap[0].length - 1, currentColumn + 1);
             break;
     }
 
-    if (map[currentRow][currentColumn].type !== "tileW" && map[currentRow][currentColumn].person !== "tileE") {
+    if (newMap[currentRow][currentColumn].type !== "tileW" && newMap[currentRow][currentColumn].person !== "tileE") {
 
         const container = $('.inventory');
 
-        if (map[currentRow][currentColumn].buff === "tileSW") {
+        if (newMap[currentRow][currentColumn].buff === "tileSW") {
             heroDamage += 25;
             container.append($("<div></div>").addClass("elementSW"));
 
-            map[currentRow][currentColumn].buff = null;
+            newMap[currentRow][currentColumn].buff = null;
 
         }
-        else if (map[currentRow][currentColumn].buff === "tileHP") {
-            map[currentRow][currentColumn].health += 5;
+        else if (newMap[currentRow][currentColumn].buff === "tileHP") {
+            newMap[currentRow][currentColumn].health += 5;
             container.append($("<div></div>").addClass("elementHP"));
 
-            map[currentRow][currentColumn].buff = null;
+            newMap[currentRow][currentColumn].buff = null;
         }
 
-        map[currentRow][currentColumn].person = "tileP";
-        updateHtmlMap(map);
+        newMap[currentRow][currentColumn].person = "tileP";
+        attackHero({ currentRow, currentColumn }, newMap);
+        renderMap(newMap,map);
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
     }
+
 }
 
 function hit() {
@@ -69,21 +78,20 @@ function hit() {
         const newRow = currentRow + dir.row;
         const newColumn = currentColumn + dir.col;
 
-        if (newRow >= 0 && newRow < map.length && newColumn >= 0 && newColumn < map[0].length) {
-            if (map[newRow][newColumn].person === "tileE") {
-                map[newRow][newColumn].health -= heroDamage;
+        if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
+            if (newMap[newRow][newColumn].person === "tileE") {
+                newMap[newRow][newColumn].health -= heroDamage;
 
-                if (map[newRow][newColumn].health <= 0) {
-                    map[newRow][newColumn].person = null;
+                if (newMap[newRow][newColumn].health <= 0) {
+                    newMap[newRow][newColumn].person = null;
                 }
             }
         }
     }
-    updateHtmlMap(map);
+    renderMap(newMap,map);
 }
 
 document.addEventListener('keydown', function (event) {
-    console.log(event);
     switch (event.key) {
         case 'w':
         case 's':
@@ -97,25 +105,6 @@ document.addEventListener('keydown', function (event) {
             break;
     }
 });
-
-function updateHtmlMap(updatedMatrix) {
-    const container = $('.field');
-    container.empty();
-
-    for (let i = 0; i < updatedMatrix.length; i++) {
-        for (let j = 0; j < updatedMatrix[i].length; j++) {
-            var tile = $("<div></div>").addClass(["tile", map[i][j].type, map[i][j].person, map[i][j].buff].join(" "));
-
-            if (map[i][j].person) {
-                var health = $("<div></div>").addClass("health");
-                health.css("width", map[i][j].getHealthPx());
-                tile.append(health);
-            }
-
-            container.append(tile);
-        }
-    }
-}
 
 function findElementCoordinates(matrix, targetElement) {
     for (const row in matrix) {

@@ -80,9 +80,6 @@ applyBuffToRandomTiles(10, "tileE");
 let hero = tiles[getRandomVal(0, tiles.length)];
 hero.person = "tileP";
 
-console.log(tiles);
-
-
 function getRandomVal(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 
