@@ -1,26 +1,21 @@
 import { directions } from "../utils/const.js";
 import { getAllEnemies, rerenderMap } from "../map/renderMap.js";
-import { hero, getCurrentMap, updateMap } from "../map/Map.js";
+import { getCurrentMap, getHero } from "../map/Map.js";
 import { findElementCoordinates } from "../utils/utils.js";
 import { getInventory } from "../inventory/inventory.js";
 import InventoryElement from "../inventory/InventoryElement.js";
 import { rerenderInventory } from "../inventory/renderInventory.js";
 
-
+let hero = getHero();
 export const coordinates = findElementCoordinates(getCurrentMap(), hero);
 
-console.log(coordinates);
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
 let gameIsEnd = false;
 
-
-
-
 export function moveHero(direction) {
     let newMap = JSON.parse(JSON.stringify(getCurrentMap()));
     let inventory = JSON.parse(JSON.stringify(getInventory()));
-
     if (gameIsEnd) {
         return;
     }

@@ -1,5 +1,5 @@
 import { getAllEnemies, rerenderMap } from "../map/renderMap.js";
-import { getCurrentMap } from "../map/Map.js";
+import { getCurrentMap, getHero } from "../map/Map.js";
 import { currentRow, currentColumn } from "./personController.js";
 import { directions } from "../utils/const.js";
 import { getIndexs, getRandomDirection, getRandomVal } from "../utils/utils.js";
@@ -21,6 +21,8 @@ export function enemyStart() {
 }
 
 function checkHero() {
+
+    let hero = getHero();
     if (gameIsEnd) {
         return;
     }
@@ -46,22 +48,24 @@ function checkHero() {
     }
 
     for (const enemy of attackingEnemies) {
+        let child = map[currentRow][currentColumn].person;
+        if (child) {
 
+            hero.person.hp -= map[enemy.row][enemy.column].person.damage;
+            child.hp -= map[enemy.row][enemy.column].person.damage;
+            rerenderMap(map);
 
-        let person = map[currentRow][currentColumn].person;
-        if (person) {
-
-            person.hp -= map[enemy.row][enemy.column].person.damage;
-
-            if (person?.hp <= 0) {
-                person = null;
+            if (hero.person?.hp <= 0) {
+                child = null;
                 gameIsEnd = true;
                 if (confirm("You Die..")) {
                     window.location.reload();
                 }
             }
+
         }
     }
+
     rerenderMap(map);
 }
 

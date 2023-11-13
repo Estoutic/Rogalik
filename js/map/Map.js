@@ -90,12 +90,14 @@ function addEnemies(count) {
                 tile = tiles[getRandomVal(0, tiles.length - 1)]
             }
         }
-        tile.person = new Person("enemy", 20, 5);
+        tile.person = new Person("enemy", 20, 3);
 
         count--;
 
     }
 }
+
+
 
 function addHero() {
     hero = tiles[getRandomVal(0, tiles.length)];
@@ -105,6 +107,9 @@ function addHero() {
         }
     }
     hero.person = new Person("person", 20, 5);
+}
+export function getHero() {
+    return hero;
 }
 
 export function updateMap(newMap) {
@@ -128,5 +133,3 @@ addBuffs(2, "weapon");
 
 addEnemies(10);
 addHero();
-
-export { hero };
