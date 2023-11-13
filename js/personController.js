@@ -97,7 +97,7 @@ export function hit() {
     updateMap(newMap);
 }
 
-function findElementCoordinates(matrix, targetElement) {
+export function findElementCoordinates(matrix, targetElement) {
     for (const row in matrix) {
         for (const col in matrix[row]) {
             if (matrix[row][col] === targetElement) {
