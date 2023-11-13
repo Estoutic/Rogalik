@@ -7,20 +7,24 @@ export function updateMap(newMap) {
         for (let j = 0; j < newMap[i].length; j++) {
             if (newMap[i][j] != map[i][j]) {
 
-                var element = $("#tile_" + i + "_" + j);
+                var element = $("#tile" + "_" + i + "_" + j);
 
                 element.removeClass();
                 element.empty();
 
                 if (newMap[i][j].person) {
+                    if (newMap[i][j].person.hp > 0) {
+                        element.addClass(["tile", newMap[i][j].type, newMap[i][j].person?.name, newMap[i][j].buff].join(" "));
 
-                    element.addClass(["tile", newMap[i][j].type, newMap[i][j].person?.name, newMap[i][j].buff].join(" "));
+                        var health = $("<div></div>").addClass("health");
+                        health.css("width", newMap[i][j].person?.hp.toString() + "px");
+                        element.append(health);
+                    }
+                    else {
+                        element.addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
 
-                    // element.addClass("health");
-                    var health = $("<div></div>").addClass("health");
-                    health.css("width", map[i][j].getHealthPx());
+                    }
 
-                    element.append(health);
                 } else {
                     element.addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
                 }
@@ -38,7 +42,6 @@ export function renderMap() {
             var tile = $("<div></div>").addClass(["tile", map[i][j].type, map[i][j].person?.name, map[i][j].buff].join(" "));
             if (map[i][j].person) {
                 var health = $("<div></div>").addClass("health");
-                console.log( map[i][j].getHealthPx());
                 health.css("width", map[i][j].getHealthPx());
                 tile.append(health);
             }

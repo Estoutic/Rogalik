@@ -57,7 +57,6 @@ export function moveObject(direction) {
         newMap[currentRow][currentColumn].person = hero.person;
 
         updateMap(newMap);
-        console.log("update");
 
     } else {
         currentRow = lastRow;
@@ -85,6 +84,16 @@ export function hit() {
         if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
             if (newMap[newRow][newColumn].person?.name === "tileE") {
                 newMap[newRow][newColumn].person.hp -= damage;
+
+                var enemy = $('#tile_' + newRow + "_" + newColumn);
+                // console.log(enemy);
+                enemy.empty();
+                var health = $("<div></div>").addClass("health");
+                health.css("width",newMap[newRow][newColumn].person.hp + "px");
+
+                enemy.append(health);
+
+                // enemy.find(".health").css({ "width": newMap[newRow][newColumn].person.hp + "px" })
 
                 if (newMap[newRow][newColumn].person.hp <= 0) {
 

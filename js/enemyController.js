@@ -25,10 +25,7 @@ export function attack() {
 }
 
 function checkEnemies() {
-
-    console.log(currentRow, currentColumn);
-
-
+    
     const attackingEnemies = [];
 
     for (const dir of enemyDirections) {
@@ -71,8 +68,6 @@ function moveEnemy() {
         if (getRandomVal() === 1) {
 
             let indexs = getIndexs(obj.id);
-            console.log(indexs);
-            
 
             let randomDirection = getRandomDirection();
 
@@ -103,8 +98,8 @@ function moveEnemy() {
                 newMap[indexs.firstNumber][indexs.secondNumber].person = null;
         
                 updateMap(newMap);
-                console.log("update");
-        
+
+                
             }
         }
     }
