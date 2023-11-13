@@ -60,6 +60,8 @@ export function moveObject(direction) {
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
+        newMap[currentRow][currentColumn].person = hero.person;
+
     }
 
 }
