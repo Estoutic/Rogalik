@@ -12,6 +12,7 @@
 		rel="stylesheet">
 	<script defer type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"
 		language="javascript1.1"></script>
+	<script defer src="./js/audio.js"></script>
 
 
 
@@ -19,7 +20,11 @@
 </head>
 
 <body>
-	<h1>Игровое поле</h1>
+	<div class="top-container">
+		<h1>Игровое поле</h1>
+		<img id="playImg"
+			src="./images/play.png"></img>
+	</div>
 	<div class="field-box">
 		<div class="field">
 
@@ -30,6 +35,10 @@
 	<div class="inventory-box">
 		<div class="inventory"></div>
 	</div>
+	<audio id="audio" controls>
+		<source src="./audio/dungeon.mp3" type="audio/mp3">
+	</audio>
+
 
 	<script type="module">
 		import App from "./js/app.js"
