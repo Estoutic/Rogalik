@@ -9,7 +9,7 @@ const rows = 24;
 for (let i = 0; i < rows; i++) {
     map[i] = [];
     for (let j = 0; j < columns; j++) {
-        map[i][j] = new Tile("tileW", null, null);
+        map[i][j] = new Tile("wall", null, null);
     }
 }
 
@@ -58,8 +58,8 @@ const tiles = map.flatMap((row) => row.filter((tile) => tile.type === "tile"));
 
 
 
-addBuffs(10, "tileHP");
-addBuffs(2, "tileSW");
+addBuffs(10, "healthPotion");
+addBuffs(2, "weapon");
 
 addEnimies(10);
 
@@ -69,7 +69,7 @@ if(hero.person != null || hero.buff != null){
         hero = tiles[getRandomVal(0, tiles.length)];
     }
 }
-hero.person = new Person("tileP", 20, 5);
+hero.person = new Person("person", 20, 5);
 
 function getRandomVal(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -105,7 +105,7 @@ function addEnimies(count) {
                 tile = tiles[getRandomVal(0, tiles.length - 1)]
             }
         }
-        tile.person = new Person("tileE", 20, 5);
+        tile.person = new Person("enemy", 20, 5);
 
         count--;
 

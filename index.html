@@ -14,8 +14,6 @@
 		language="javascript1.1"></script>
 	<script defer src="./js/audio.js"></script>
 
-
-
 	<link rel="stylesheet" href="./css/main.css" />
 </head>
 
@@ -39,9 +37,8 @@
 		<source src="./audio/dungeon.mp3" type="audio/mp3">
 	</audio>
 
-
-	<script type="module">
-		import App from "./js/app.js"
+	<script defer type="module">
+		import App from "./js/app.js";
 		const app = new App();
 		app.init();
 	</script>

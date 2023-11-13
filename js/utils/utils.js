@@ -27,7 +27,7 @@ export function getIndexs(str) {
     if (match) {
         const firstNumber = parseInt(match[1], 10);
         const secondNumber = parseInt(match[2], 10);
-        return {firstNumber, secondNumber};
+        return { firstNumber, secondNumber };
 
     }
 }

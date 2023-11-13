@@ -1,6 +1,6 @@
 import { directions } from "../utils/const.js";
 import { updateMap } from "../map/renderMap.js";
-import { hero,map } from "../map/Map.js";
+import { hero, map } from "../map/Map.js";
 import { findElementCoordinates } from "../utils/utils.js";
 
 
@@ -34,19 +34,21 @@ export function moveObject(direction) {
             break;
     }
 
-    if (newMap[currentRow][currentColumn].type != "tileW" && newMap[currentRow][currentColumn].person?.name != "tileE") {
+    const currentTile = newMap[currentRow][currentColumn];
+
+    if (currentTile.type != "wall" && currentTile.person?.name != "enemy") {
 
         const container = $('.inventory');
 
-        if (newMap[currentRow][currentColumn].buff === "tileSW") {
+        if (currentTile.buff === "weapon") {
             hero.person.damage += 5;
 
             container.append($("<div></div>").addClass("elementSW"));
 
-            newMap[currentRow][currentColumn].buff = null;
+            currentTile.buff = null;
 
         }
-        else if (newMap[currentRow][currentColumn].buff === "tileHP") {
+        else if (currentTile.buff === "healthPotion") {
 
             if (hero.person.hp < 20) {
                 hero.person.hp += 5;
@@ -54,10 +56,10 @@ export function moveObject(direction) {
 
             container.append($("<div></div>").addClass("elementHP"));
 
-            newMap[currentRow][currentColumn].buff = null;
+            currentTile.buff = null;
         }
 
-        newMap[currentRow][currentColumn].person = hero.person;
+        currentTile.person = hero.person;
         updateMap(newMap);
 
 
@@ -76,10 +78,11 @@ export function hit() {
         const newColumn = currentColumn + dir.col;
 
         if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
-            if (newMap[newRow][newColumn].person?.name === "tileE") {
-                newMap[newRow][newColumn].person.hp -= hero.person.damage;
+            const currentPerson = newMap[newRow][newColumn].person;
+            if (currentPerson?.name === "enemy") {
+                currentPerson.hp -= hero.person.damage;
 
-                if (newMap[newRow][newColumn].person.hp <= 0) {
+                if (currentPerson.hp <= 0) {
                     newMap[newRow][newColumn].person = null;
                 }
             }

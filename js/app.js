@@ -9,14 +9,14 @@ class App {
         renderMap();
 
         document.addEventListener('keydown', (event) => {
-            switch (event.key) {
-                case 'w':
-                case 's':
-                case 'a':
-                case 'd':
-                    moveObject(event.key);
+            switch (event.code) {
+                case 'KeyW':
+                case 'KeyS':
+                case 'KeyA':
+                case 'KeyD':
+                    moveObject(event.code.replace('Key', '').toLowerCase());
                     break;
-                case " ":
+                case "Space":
                     event.preventDefault();
                     hit();
                     break;

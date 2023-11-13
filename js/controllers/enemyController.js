@@ -30,7 +30,7 @@ function checkHero() {
             enemyRow < newMap.length &&
             enemyColumn >= 0 &&
             enemyColumn < newMap[0].length &&
-            newMap[enemyRow][enemyColumn].person?.name === "tileE"
+            newMap[enemyRow][enemyColumn].person?.name === "enemy"
         ) {
             attackingEnemies.push({ row: enemyRow, column: enemyColumn });
         }
@@ -38,58 +38,52 @@ function checkHero() {
 
     for (const enemy of attackingEnemies) {
 
-        if (newMap[currentRow][currentColumn].person) {
+        let person = newMap[currentRow][currentColumn].person;
+        if (person) {
 
-            newMap[currentRow][currentColumn].person.hp -= newMap[enemy.row][enemy.column].person.damage;
+            person.hp -= newMap[enemy.row][enemy.column].person.damage;
 
-            if (newMap[currentRow][currentColumn].person?.hp <= 0) {
+            if (person?.hp <= 0) {
 
                 var hero = $("#tile_" + currentRow + "_" + currentColumn);
-                hero.removeClass(newMap[currentRow][currentColumn].person.name);
-                newMap[currentRow][currentColumn].person = null;
+                hero.removeClass(person.name);
+                person = null;
             }
         }
     }
     updateMap(newMap);
 }
 
-
 function moveEnemy() {
-
-    var enemies = $(".tile.tileE");
+    const enemies = $(".tile.enemy");
 
     for (const obj of enemies) {
-
         if (getRandomVal() === 1) {
+            const indexs = getIndexs(obj.id);
+            const randomDirection = getRandomDirection();
 
-            let indexs = getIndexs(obj.id);
+            let newEnemyRow = Math.max(0, Math.min(newMap.length - 1, indexs.firstNumber + randomDirection.row));
+            let newEnemyColumn = Math.max(0, Math.min(newMap[0].length - 1, indexs.secondNumber + randomDirection.col));
 
-            let randomDirection = getRandomDirection();
+            const destinationTile = newMap[newEnemyRow][newEnemyColumn];
 
-            let newEnemyRow = indexs.firstNumber + randomDirection.row;
-            let newEnemyColumn = indexs.secondNumber + randomDirection.col;
+            if (destinationTile.type !== "wall" && destinationTile.person?.name !== "person" && destinationTile.person?.name !== "enemy") {
 
-            newEnemyRow = Math.max(0, Math.min(newMap.length - 1, newEnemyRow));
-            newEnemyColumn = Math.max(0, Math.min(newMap[0].length - 1, newEnemyColumn));
+                const sourceTile = newMap[indexs.firstNumber][indexs.secondNumber];
 
-            if (newMap[newEnemyRow][newEnemyColumn].type != "tileW"
-                && newMap[newEnemyRow][newEnemyColumn].person?.name != "tileP" && newMap[newEnemyRow][newEnemyColumn].person?.name != "tileE") {
+                if (destinationTile.buff === "weapon") {
 
-                if (newMap[newEnemyRow][newEnemyColumn].buff === "tileSW") {
-
-                    newMap[indexs.firstNumber][indexs.secondNumber].person.damage += 5;
-
-                    newMap[newEnemyRow][newEnemyColumn].buff = null;
-                }
-                else if (newMap[newEnemyRow][newEnemyColumn].buff === "tileHP") {
-
-                    if (newMap[indexs.firstNumber][indexs.secondNumber].person.hp < 20) {
-                        newMap[indexs.firstNumber][indexs.secondNumber].person.hp += 5;
+                    sourceTile.person.damage += 5;
+                    destinationTile.buff = null;
+                } else if (destinationTile.buff === "healthPotion") {
+                    if (sourceTile.person.hp < 20) {
+                        sourceTile.person.hp += 5;
                     }
-                    newMap[newEnemyRow][newEnemyColumn].buff = null;
+                    destinationTile.buff = null;
                 }
-                newMap[newEnemyRow][newEnemyColumn].person = newMap[indexs.firstNumber][indexs.secondNumber].person;
-                newMap[indexs.firstNumber][indexs.secondNumber].person = null;
+
+                destinationTile.person = sourceTile.person;
+                sourceTile.person = null;
 
                 updateMap(newMap);
             }

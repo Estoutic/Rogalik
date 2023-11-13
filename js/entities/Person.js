@@ -1,9 +1,6 @@
-class Person{
-    name;
-    hp;
-    damage;
+class Person {
 
-    constructor(name,hp ,damage){
+    constructor(name, hp, damage) {
         this.name = name;
         this.hp = hp;
         this.damage = damage;

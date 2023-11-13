@@ -32,22 +32,22 @@ h1 {
   background-image: url(../images/tile-.png);
   z-index: 5;
 }
-.field .tileW {
+.field .wall {
   background-image: url(../images/tile-W.png);
 }
-.field .tileE {
+.field .enemy {
   background-image: url(../images/tile-E.png);
   z-index: 10;
 }
-.field .tileP {
+.field .person {
   background-image: url(../images/tile-P.png);
   z-index: 10;
 }
-.field .tileHP {
+.field .healthPotion {
   background-image: url(../images/tile-HP.png);
   z-index: 9;
 }
-.field .tileSW {
+.field .weapon {
   background-image: url(../images/tile-SW.png);
   z-index: 9;
 }
@@ -58,7 +58,7 @@ h1 {
   top: 0px;
   height: 3px;
 }
-.field .tileP .health {
+.field .person .health {
   background-color: #00ff00;
   z-index: 11;
   left: 0px;

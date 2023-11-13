@@ -33,7 +33,8 @@ export function renderMap() {
             var tile = $("<div></div>").addClass(["tile", map[i][j].type, map[i][j].person?.name, map[i][j].buff].join(" "));
             if (map[i][j].person) {
                 var health = $("<div></div>").addClass("health");
-                health.css("width", map[i][j].getHealthPx());
+                health.css("width", map[i][j].person.hp + "px");
+                
                 tile.append(health);
             }
             tile.attr("id", "tile_" + i + "_" + j);
