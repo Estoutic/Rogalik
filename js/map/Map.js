@@ -1,12 +1,13 @@
-import Tile from "./Tile.js";
-import Person from './Person.js'
-let map = []
+import Tile from "../entities/Tile.js";
+import Person from '../entities/Person.js'
+
+let map = [];
 
 const columns = 40;
 const rows = 24;
 
 for (let i = 0; i < rows; i++) {
-    map[i] = []
+    map[i] = [];
     for (let j = 0; j < columns; j++) {
         map[i][j] = new Tile("tileW", null, null);
     }
@@ -35,6 +36,46 @@ for (let index = 0; index < rooms; index++) {
         }
     }
 }
+
+
+let horizontalLines = getRandomVal(3, 5);
+var verticalLines = getRandomVal(3, 5);
+
+while (horizontalLines > 0 || verticalLines > 0) {
+    if (horizontalLines > 0) {
+        addRandomLines(columns, rows - 1);
+        horizontalLines--;
+    }
+
+    if (verticalLines > 0) {
+        addRandomLines(rows, columns - 1);
+        verticalLines--;
+    }
+}
+
+
+const tiles = map.flatMap((row) => row.filter((tile) => tile.type === "tile"));
+
+
+
+addBuffs(10, "tileHP");
+addBuffs(2, "tileSW");
+
+addEnimies(10);
+
+let hero = tiles[getRandomVal(0, tiles.length)];
+if(hero.person != null || hero.buff != null){
+    while(hero.person != null & hero.buff != null){
+        hero = tiles[getRandomVal(0, tiles.length)];
+    }
+}
+hero.person = new Person("tileP", 20, 5);
+
+function getRandomVal(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+
+}
+
 function addRandomLines(lengthType, endRange) {
 
     let startCoord = getRandomVal(0, endRange);
@@ -49,65 +90,25 @@ function addRandomLines(lengthType, endRange) {
 
 }
 
-let horizontalLines = getRandomVal(3, 5);
-var verticalLines = getRandomVal(3, 5);
-
-while (horizontalLines > 0 || verticalLines > 0) {
-    if (horizontalLines > 0) {
-        addRandomLines(columns, rows - 1);
-        horizontalLines--;
+function addBuffs(count, buffType) {
+    while (count > 0) {
+        tiles[getRandomVal(0, tiles.length - 1)].buff = buffType;
+        count--;
     }
-
-    if (verticalLines > 0) {
-        addRandomLines(rows, columns - 1);
-        verticalLines--;
-            }
-    }
-
-
-const tiles = map.flatMap((row) => row.filter((tile) => {
-    return tile.type === "tile";
-}));
-
-
-applyBuffToRandomTiles(10, "tileHP");
-
-applyBuffToRandomTiles(2, "tileSW");
-
-
-addEnimies(10);
-
-let hero = tiles[getRandomVal(0, tiles.length)];
-hero.person = new Person("tileP",20,5);
-
-function getRandomVal(min, max) {
-    return Math.floor(Math.random ()  * (max - min + 1)) + min;
-
 }
 
 function addEnimies(count) {
     while (count > 0) {
-        tiles[getRandomVal(0, tiles.length - 1)].person = new Person("tileE", 20, 5);
+        let tile = tiles[getRandomVal(0, tiles.length - 1)]
+        if (tile.buff != null) {
+            while (tile.buff != null) {
+                tile = tiles[getRandomVal(0, tiles.length - 1)]
+            }
+        }
+        tile.person = new Person("tileE", 20, 5);
 
         count--;
 
-    }
-}
-
-function applyBuffToRandomTiles(count, buffType) {
-    if (buffType === "tileE") {
-        while (count > 0) {
-            tiles[getRandomVal(0, tiles.length - 1)].person = buffType;
-            count--;
-
-        }
-    }
-    else {
-        while (count > 0) {
-            tiles[getRandomVal(0, tiles.length - 1)].buff = buffType;
-            count--;
-
-        }
     }
 }
 

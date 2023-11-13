@@ -1,5 +1,5 @@
-import Person from "./Person.js";
 import { map } from "./Map.js"
+
 export function updateMap(newMap) {
 
     for (let i = 0; i < newMap.length; i++) {

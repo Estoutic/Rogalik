@@ -1,12 +1,16 @@
-import { map, hero } from "./Map.js";
-import { updateMap } from "./renderMap.js";
+import { directions } from "../utils/const.js";
+import { updateMap } from "../map/renderMap.js";
+import { hero,map } from "../map/Map.js";
+import { findElementCoordinates } from "../utils/utils.js";
 
-const coordinates = findElementCoordinates(map, hero);
+
+export const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
 
 let newMap = JSON.parse(JSON.stringify(map));
+
 
 export function moveObject(direction) {
 
@@ -45,7 +49,7 @@ export function moveObject(direction) {
         else if (newMap[currentRow][currentColumn].buff === "tileHP") {
 
             if (hero.person.hp < 20) {
-               hero.person.hp += 5;
+                hero.person.hp += 5;
             }
 
             container.append($("<div></div>").addClass("elementHP"));
@@ -54,29 +58,18 @@ export function moveObject(direction) {
         }
 
         newMap[currentRow][currentColumn].person = hero.person;
-
         updateMap(newMap);
+
 
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
         newMap[currentRow][currentColumn].person = hero.person;
-
     }
 
 }
 
 export function hit() {
-    const directions = [
-        { row: -1, col: 0 },
-        { row: -1, col: 1 },
-        { row: -1, col: -1 },
-        { row: 1, col: 1 },
-        { row: 1, col: -1 },
-        { row: 1, col: 0 },
-        { row: 0, col: -1 },
-        { row: 0, col: 1 }
-    ];
 
     for (const dir of directions) {
         const newRow = currentRow + dir.row;
@@ -93,17 +86,6 @@ export function hit() {
         }
     }
     updateMap(newMap);
-}
-
-export function findElementCoordinates(matrix, targetElement) {
-    for (const row in matrix) {
-        for (const col in matrix[row]) {
-            if (matrix[row][col] === targetElement) {
-                return { row: parseInt(row), column: parseInt(col) };
-            }
-        }
-    }
-    return null;
 }
 
 export { newMap, currentRow, currentColumn };

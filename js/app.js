@@ -1,25 +1,30 @@
-import { attack } from "./enemyController.js";
-import { hit, moveObject } from "./personController.js";
-import { renderMap } from "./renderMap.js"
+import { enemyStart } from "./controllers/enemyController.js";
+import { hit, moveObject } from "./controllers/personController.js";
+import { renderMap } from "./map/renderMap.js"
 
 
+class App {
 
-renderMap();
+    init() {
+        renderMap();
 
-document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'w':
+                case 's':
+                case 'a':
+                case 'd':
+                    moveObject(event.key);
+                    break;
+                case " ":
+                    event.preventDefault();
+                    hit();
+                    break;
+            }
+        });
 
-    switch (event.key) {
-        case 'w':
-        case 's':
-        case 'a':
-        case 'd':
-            moveObject(event.key);
-            break;
-        case " ":
-            event.preventDefault();
-            hit();
-            break;
+        enemyStart();
     }
-});
-attack();
+}
 
+export default App;
