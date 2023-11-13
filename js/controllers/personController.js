@@ -48,7 +48,6 @@ export function moveHero(direction) {
             hero.person.damage += 5;
 
             inventory.push(new InventoryElement("inventory-weapon"));
-            console.log("add");
 
             currentTile.buff = null;
 
@@ -58,7 +57,6 @@ export function moveHero(direction) {
             if (hero.person.hp < 20) {
                 hero.person.hp += 5;
             }
-            console.log("add");
             inventory.push(new InventoryElement("inventory-potion"));
 
             currentTile.buff = null;

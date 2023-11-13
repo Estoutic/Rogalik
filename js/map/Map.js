@@ -127,7 +127,6 @@ generateRooms();
 addRoads();
 
 const tiles = map.flatMap((row) => row.filter((tile) => tile.type === "tile"));
-console.log(tiles);
 addBuffs(10, "healthPotion");
 addBuffs(2, "weapon");
 

@@ -7,10 +7,7 @@ export function rerenderInventory(newInventory) {
 
     const container = $('.inventory');
 
-    console.log(newInventory);
-
     for (let i = 0; i < newInventory.length; i++) {
-        console.log(newInventory[i], invenotry[i]);
         if (JSON.stringify(newInventory[i]) === JSON.stringify(invenotry[i])) {
             continue
 
