@@ -76,14 +76,14 @@ h1 {
   width: 800px;
   height: 20px;
 }
-.inventory .elementSW {
+.inventory .inventory-weapon {
   width: 20px;
   height: 20px;
   background-size: 100%;
   z-index: 10;
   background-image: url(../images/tile-SW.png);
 }
-.inventory .elementHP {
+.inventory .inventory-potion {
   width: 20px;
   background-size: 100%;
   height: 20px;
@@ -107,8 +107,15 @@ h1 {
 
 .top-container{
   display: flex;
+  align-items: flex-start;
+  gap: 20px
+}
+.music-container{
+  display: flex;
   gap: 10px;
+
   align-items: center;
+
 }
 
 img{

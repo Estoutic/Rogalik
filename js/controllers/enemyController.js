@@ -1,11 +1,15 @@
-import { updateMap } from "../map/renderMap.js";
-import { newMap, currentRow, currentColumn } from "./personController.js";
+import { getAllEnemies, rerenderMap } from "../map/renderMap.js";
+import { getCurrentMap } from "../map/Map.js";
+import { currentRow, currentColumn } from "./personController.js";
 import { directions } from "../utils/const.js";
 import { getIndexs, getRandomDirection, getRandomVal } from "../utils/utils.js";
 
+
+let gameIsEnd = false;
+
 export function enemyStart() {
 
-    const intervalDuration = 1000;
+    const intervalDuration = 500;
 
     setInterval(() => {
         checkHero();
@@ -17,8 +21,13 @@ export function enemyStart() {
 }
 
 function checkHero() {
-
+    if (gameIsEnd) {
+        return;
+    }
     const attackingEnemies = [];
+
+    let map = JSON.parse(JSON.stringify(getCurrentMap()));
+
 
     for (const dir of directions) {
 
@@ -27,10 +36,10 @@ function checkHero() {
 
         if (
             enemyRow >= 0 &&
-            enemyRow < newMap.length &&
+            enemyRow < map.length &&
             enemyColumn >= 0 &&
-            enemyColumn < newMap[0].length &&
-            newMap[enemyRow][enemyColumn].person?.name === "enemy"
+            enemyColumn < map[0].length &&
+            map[enemyRow][enemyColumn].person?.name === "enemy"
         ) {
             attackingEnemies.push({ row: enemyRow, column: enemyColumn });
         }
@@ -38,45 +47,52 @@ function checkHero() {
 
     for (const enemy of attackingEnemies) {
 
-        let person = newMap[currentRow][currentColumn].person;
+
+        let person = map[currentRow][currentColumn].person;
         if (person) {
 
-            person.hp -= newMap[enemy.row][enemy.column].person.damage;
+            person.hp -= map[enemy.row][enemy.column].person.damage;
 
             if (person?.hp <= 0) {
-
-                var hero = $("#tile_" + currentRow + "_" + currentColumn);
-                hero.removeClass(person.name);
                 person = null;
+                gameIsEnd = true;
+                if (confirm("You Die..")) {
+                    window.location.reload();
+                }
             }
         }
     }
-    updateMap(newMap);
+    rerenderMap(map);
 }
 
 function moveEnemy() {
-    const enemies = $(".tile.enemy");
+    if (gameIsEnd) {
+        return;
+    }
 
-    for (const obj of enemies) {
+    const enemies = getAllEnemies();
+    for (const enemy of enemies) {
         if (getRandomVal() === 1) {
-            const indexs = getIndexs(obj.id);
+            let map = JSON.parse(JSON.stringify(getCurrentMap()));
+
+            const indexs = getIndexs(enemy.id);
             const randomDirection = getRandomDirection();
 
-            let newEnemyRow = Math.max(0, Math.min(newMap.length - 1, indexs.firstNumber + randomDirection.row));
-            let newEnemyColumn = Math.max(0, Math.min(newMap[0].length - 1, indexs.secondNumber + randomDirection.col));
+            let newEnemyRow = Math.max(0, Math.min(map.length - 1, indexs.firstNumber + randomDirection.row));
+            let newEnemyColumn = Math.max(0, Math.min(map[0].length - 1, indexs.secondNumber + randomDirection.col));
 
-            const destinationTile = newMap[newEnemyRow][newEnemyColumn];
+            const destinationTile = map[newEnemyRow][newEnemyColumn];
 
             if (destinationTile.type !== "wall" && destinationTile.person?.name !== "person" && destinationTile.person?.name !== "enemy") {
 
-                const sourceTile = newMap[indexs.firstNumber][indexs.secondNumber];
+                const sourceTile = map[indexs.firstNumber][indexs.secondNumber];
 
                 if (destinationTile.buff === "weapon") {
 
                     sourceTile.person.damage += 5;
                     destinationTile.buff = null;
                 } else if (destinationTile.buff === "healthPotion") {
-                    if (sourceTile.person.hp < 20) {
+                    if (sourceTile.person?.hp < 20) {
                         sourceTile.person.hp += 5;
                     }
                     destinationTile.buff = null;
@@ -85,7 +101,7 @@ function moveEnemy() {
                 destinationTile.person = sourceTile.person;
                 sourceTile.person = null;
 
-                updateMap(newMap);
+                rerenderMap(map);
             }
         }
     }

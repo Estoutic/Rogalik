@@ -1,19 +1,29 @@
 import { directions } from "../utils/const.js";
-import { updateMap } from "../map/renderMap.js";
-import { hero, map } from "../map/Map.js";
+import { getAllEnemies, rerenderMap } from "../map/renderMap.js";
+import { hero, getCurrentMap, updateMap } from "../map/Map.js";
 import { findElementCoordinates } from "../utils/utils.js";
+import { getInventory } from "../inventory/inventory.js";
+import InventoryElement from "../inventory/InventoryElement.js";
+import { rerenderInventory } from "../inventory/renderInventory.js";
 
 
-export const coordinates = findElementCoordinates(map, hero);
+export const coordinates = findElementCoordinates(getCurrentMap(), hero);
 
+console.log(coordinates);
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
+let gameIsEnd = false;
 
-let newMap = JSON.parse(JSON.stringify(map));
 
 
-export function moveObject(direction) {
 
+export function moveHero(direction) {
+    let newMap = JSON.parse(JSON.stringify(getCurrentMap()));
+    let inventory = JSON.parse(JSON.stringify(getInventory()));
+
+    if (gameIsEnd) {
+        return;
+    }
     let lastRow = currentRow;
     let lastColumn = currentColumn;
 
@@ -38,12 +48,12 @@ export function moveObject(direction) {
 
     if (currentTile.type != "wall" && currentTile.person?.name != "enemy") {
 
-        const container = $('.inventory');
 
         if (currentTile.buff === "weapon") {
             hero.person.damage += 5;
 
-            container.append($("<div></div>").addClass("elementSW"));
+            inventory.push(new InventoryElement("inventory-weapon"));
+            console.log("add");
 
             currentTile.buff = null;
 
@@ -53,42 +63,57 @@ export function moveObject(direction) {
             if (hero.person.hp < 20) {
                 hero.person.hp += 5;
             }
-
-            container.append($("<div></div>").addClass("elementHP"));
+            console.log("add");
+            inventory.push(new InventoryElement("inventory-potion"));
 
             currentTile.buff = null;
         }
 
         currentTile.person = hero.person;
-        updateMap(newMap);
 
-
+        rerenderMap(newMap);
+        rerenderInventory(inventory);
     } else {
         currentRow = lastRow;
         currentColumn = lastColumn;
         newMap[currentRow][currentColumn].person = hero.person;
+        rerenderMap(newMap);
+
     }
 
 }
 
 export function hit() {
+    if (gameIsEnd) {
+        return;
+    }
+    let map = JSON.parse(JSON.stringify(getCurrentMap()));
 
+    if (getAllEnemies().length === 0) {
+        gameIsEnd = true;
+        if (confirm("You Win!!!")) {
+            window.location.reload();
+        }
+
+    }
     for (const dir of directions) {
         const newRow = currentRow + dir.row;
         const newColumn = currentColumn + dir.col;
 
-        if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
-            const currentPerson = newMap[newRow][newColumn].person;
+        if (newRow >= 0 && newRow < map.length && newColumn >= 0 && newColumn < map[0].length) {
+            const currentPerson = map[newRow][newColumn].person;
             if (currentPerson?.name === "enemy") {
                 currentPerson.hp -= hero.person.damage;
 
                 if (currentPerson.hp <= 0) {
-                    newMap[newRow][newColumn].person = null;
+                    map[newRow][newColumn].person = null;
+
                 }
             }
         }
     }
-    updateMap(newMap);
+    rerenderMap(map);
 }
 
-export { newMap, currentRow, currentColumn };
+
+export { currentRow, currentColumn };

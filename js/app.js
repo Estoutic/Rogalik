@@ -1,5 +1,5 @@
 import { enemyStart } from "./controllers/enemyController.js";
-import { hit, moveObject } from "./controllers/personController.js";
+import { hit, moveHero } from "./controllers/personController.js";
 import { renderMap } from "./map/renderMap.js"
 
 
@@ -14,7 +14,7 @@ class App {
                 case 'KeyS':
                 case 'KeyA':
                 case 'KeyD':
-                    moveObject(event.code.replace('Key', '').toLowerCase());
+                    moveHero(event.code.replace('Key', '').toLowerCase());
                     break;
                 case "Space":
                     event.preventDefault();
