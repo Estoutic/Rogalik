@@ -1,38 +1,29 @@
 import Person from "./Person.js";
 import { map } from "./Map.js"
 export function updateMap(newMap) {
-    console.log(newMap);
 
     for (let i = 0; i < newMap.length; i++) {
         for (let j = 0; j < newMap[i].length; j++) {
-            if (newMap[i][j] != map[i][j]) {
+            const currentTile = newMap[i][j];
+            const element = $("#tile_" + i + "_" + j);
+            element.empty();
 
-                var element = $("#tile" + "_" + i + "_" + j);
+            const tileClasses = ["tile", currentTile.type, currentTile.buff];
+            if (currentTile.person) {
 
-                element.removeClass();
-                element.empty();
+                if (currentTile.person.hp > 0) {
+                    tileClasses.push(currentTile.person.name);
 
-                if (newMap[i][j].person) {
-                    if (newMap[i][j].person.hp > 0) {
-                        element.addClass(["tile", newMap[i][j].type, newMap[i][j].person?.name, newMap[i][j].buff].join(" "));
-
-                        var health = $("<div></div>").addClass("health");
-                        health.css("width", newMap[i][j].person?.hp.toString() + "px");
-                        element.append(health);
-                    }
-                    else {
-                        element.addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
-
-                    }
-
-                } else {
-                    element.addClass(["tile", newMap[i][j].type, newMap[i][j].buff].join(" "));
+                    const health = $("<div></div>").addClass("health");
+                    health.css("width", currentTile.person.hp + "px");
+                    element.append(health);
                 }
             }
-
+            element.removeClass().addClass(tileClasses.join(" "));
         }
     }
 }
+
 
 export function renderMap() {
     const container = $('.field');

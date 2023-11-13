@@ -5,8 +5,6 @@ const coordinates = findElementCoordinates(map, hero);
 
 let currentRow = coordinates.row;
 let currentColumn = coordinates.column;
-let hp = map[currentRow][currentColumn].person.hp;
-let damage = map[currentRow][currentColumn].person.damage;
 
 let newMap = JSON.parse(JSON.stringify(map));
 
@@ -37,7 +35,7 @@ export function moveObject(direction) {
         const container = $('.inventory');
 
         if (newMap[currentRow][currentColumn].buff === "tileSW") {
-            damage += 5;
+            hero.person.damage += 5;
 
             container.append($("<div></div>").addClass("elementSW"));
 
@@ -45,8 +43,9 @@ export function moveObject(direction) {
 
         }
         else if (newMap[currentRow][currentColumn].buff === "tileHP") {
-            if (hp < 20) {
-                hp += 5;
+
+            if (hero.person.hp < 20) {
+               hero.person.hp += 5;
             }
 
             container.append($("<div></div>").addClass("elementHP"));
@@ -83,21 +82,9 @@ export function hit() {
 
         if (newRow >= 0 && newRow < newMap.length && newColumn >= 0 && newColumn < newMap[0].length) {
             if (newMap[newRow][newColumn].person?.name === "tileE") {
-                newMap[newRow][newColumn].person.hp -= damage;
-
-                var enemy = $('#tile_' + newRow + "_" + newColumn);
-                // console.log(enemy);
-                enemy.empty();
-                var health = $("<div></div>").addClass("health");
-                health.css("width",newMap[newRow][newColumn].person.hp + "px");
-
-                enemy.append(health);
-
-                // enemy.find(".health").css({ "width": newMap[newRow][newColumn].person.hp + "px" })
+                newMap[newRow][newColumn].person.hp -= hero.person.damage;
 
                 if (newMap[newRow][newColumn].person.hp <= 0) {
-
-
                     newMap[newRow][newColumn].person = null;
                 }
             }
